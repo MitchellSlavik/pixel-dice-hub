@@ -2,16 +2,35 @@
   "name": "pixel-dice-hub",
   "version": "0.1.0",
   "private": true,
+  "main": "src/electron/start.js",
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
+    "antd": "^4.4.3",
+    "custom-electron-titlebar": "^3.2.3",
+    "electron": "^9.1.0",
+    "electron-is-dev": "^1.2.0",
+    "electron-reload": "^1.5.0",
+    "noble": "^1.9.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.1",
+    "react-three-fiber": "^4.2.17",
+    "react-use-gesture": "^7.0.15",
+    "three": "^0.118.3",
+    "typescript": "^3.9.7",
+    "ws": "^7.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.43",
+    "@types/react-router-dom": "^5.1.5",
+    "cross-env": "^7.0.2",
+    "electron-builder": "^22.7.0",
+    "electron-rebuild": "^1.11.0",
+    "nodemon": "^2.0.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "electron": "cross-env NODE_ENV=dev nodemon --exec \"\"electron .\"\"",
+    "start": "cross-env BROWSER=none react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -26,9 +45,31 @@
       "not op_mini all"
     ],
     "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
+      "last 1 chrome version"
+    ]
+  },
+  "homepage": "./",
+  "build": {
+    "appId": "com.pixels.diceHub",
+    "directories": {
+      "buildResources": "assets"
+    },
+    "win": {
+      "category": "your.app.category.type",
+      "iconUrl": "path-to-icon.png"
+    },
+    "mac": {
+      "category": "your.app.category.type",
+      "iconUrl": "path-to-icon.png"
+    },
+    "extraResources": [
+      {
+        "from": "./src/resources/",
+        "to": "resources",
+        "filter": [
+          "**/*"
+        ]
+      }
     ]
   }
 }
