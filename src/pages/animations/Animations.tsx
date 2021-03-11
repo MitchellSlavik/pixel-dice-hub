@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Button, InputNumber, Typography } from "antd";
+import { SketchPicker, ColorResult } from "react-color";
 
 import DieScene from "../../components/DieScene";
 
@@ -8,7 +9,7 @@ import D6 from "../../components/D6";
 import BasicPageLayout from "../../components/BasicPageLayout";
 import TimelinePanel from "./TimelinePanel";
 
-const BLACK = [0, 0, 0];
+const BLACK = [255, 2, 2];
 
 const DIE_SIDES = 20;
 
@@ -34,6 +35,8 @@ type State = {
   animationDuration: number;
   tempAnimationDuration: number;
   animationData: AnimationData[];
+  dieColor: { r: number; g: number; b: number };
+  showDieColorPicker: boolean;
 };
 
 export default class AnimationEditor extends Component<Props, State> {
@@ -44,6 +47,8 @@ export default class AnimationEditor extends Component<Props, State> {
       animationDuration: 2000,
       tempAnimationDuration: 2000,
       animationData: new Array(DIE_SIDES).fill(0).map(() => ({ sections: [] })),
+      dieColor: { r: 20, g: 20, b: 20 },
+      showDieColorPicker: false,
     };
   }
 
@@ -114,6 +119,20 @@ export default class AnimationEditor extends Component<Props, State> {
     return finalData;
   };
 
+  handleDieColorPickerClick = () => {
+    this.setState(({ showDieColorPicker }) => ({
+      showDieColorPicker: !showDieColorPicker,
+    }));
+  };
+
+  handleDieColorPickerClose = () => {
+    this.setState({ showDieColorPicker: false });
+  };
+
+  onDieColorChange = (color: ColorResult) => {
+    this.setState({ dieColor: color.rgb });
+  };
+
   render() {
     const compiledAnimation = this.compileAnimationDataForRendering();
     return (
@@ -132,13 +151,62 @@ export default class AnimationEditor extends Component<Props, State> {
                 defaultValue={2000}
                 onChange={this.onAnimationDurationChange}
               />
-              <Button onClick={this.onAnimationDurationSet}>Set</Button>
+              <Button
+                style={{ marginTop: -20 }}
+                onClick={this.onAnimationDurationSet}
+              >
+                Set
+              </Button>
+              <div>
+                <Typography>Die Color</Typography>
+                <Button onClick={this.handleDieColorPickerClick}>
+                  <div
+                    style={{
+                      height: 15,
+                      width: 30,
+                      background: `rgb(${this.state.dieColor.r}, ${this.state.dieColor.g}, ${this.state.dieColor.b})`,
+                    }}
+                  ></div>
+                </Button>
+                {this.state.showDieColorPicker && (
+                  <div
+                    className="colorPicker"
+                    style={{ position: "absolute", zIndex: 2 }}
+                  >
+                    <div
+                      style={{
+                        position: "fixed",
+                        top: 0,
+                        right: 0,
+                        left: 0,
+                        bottom: 0,
+                      }}
+                      onClick={this.handleDieColorPickerClose}
+                    ></div>
+                    <SketchPicker
+                      disableAlpha
+                      color={this.state.dieColor}
+                      onChange={this.onDieColorChange}
+                      styles={{
+                        default: {
+                          picker: {
+                            background: "#000",
+                            border: "solid 1px white",
+                            color: "black",
+                          },
+                        },
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
             <div style={{ height: "100%", width: "500px" }}>
               <DieScene>
                 <D20
                   animations={compiledAnimation}
                   animationDuration={this.state.animationDuration / 1000}
+                  dieColor={this.state.dieColor}
                 />
                 {/* <D6 animations={[]} animationDuration={1} /> */}
               </DieScene>

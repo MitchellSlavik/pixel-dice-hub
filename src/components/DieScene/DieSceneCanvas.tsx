@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, Suspense } from "react";
 import { Canvas } from "react-three-fiber";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import DieScene from "./DieScene";
@@ -18,9 +18,12 @@ const DieSceneCanvas: React.FC = ({ children }) => {
         controls.current.enableKeys = false;
         controls.current.enableZoom = false;
       }}
+      gl={{
+        antialias: true,
+      }}
     >
       <DieScene />
-      {children}
+      <Suspense fallback={null}>{children}</Suspense>
     </Canvas>
   );
 };

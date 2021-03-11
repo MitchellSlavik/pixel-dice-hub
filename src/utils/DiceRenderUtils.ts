@@ -77,7 +77,7 @@ const createLight = (
   color: string | number | Color,
   vertices: ReactThreeFiber.Vector3[]
 ) => {
-  const pl = new PointLight("#ffffff", 0.009, 5);
+  const pl = new PointLight(color, intensity, distance, 20);
 
   pl.position.set(...getAvgPosition(vertices));
 

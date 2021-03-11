@@ -11,7 +11,9 @@ extend({ EffectComposer, ShaderPass, RenderPass, UnrealBloomPass });
 
 export default () => {
   const { scene, gl, size, camera } = useThree();
-  const aspect = useMemo(() => new THREE.Vector2(512, 512), []);
+  const aspect = useMemo(() => new THREE.Vector2(size.width, size.height), [
+    size,
+  ]);
   const composer = useMemo(() => {
     const ec = new EffectComposer(gl);
 
@@ -24,7 +26,7 @@ export default () => {
     shaderPass.renderToScreen = true;
 
     ec.addPass(shaderPass);
-    ec.addPass(new UnrealBloomPass(aspect, 0.9, 1, 0.9));
+    ec.addPass(new UnrealBloomPass(aspect, 1.2, 1.3, 0.8));
 
     return ec;
   }, [scene, camera, aspect, size, gl]);

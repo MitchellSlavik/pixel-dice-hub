@@ -6,6 +6,7 @@ import {
   MeshBasicMaterial,
   Camera,
   RingBufferGeometry,
+  PointLight,
 } from "three";
 import { Reflector } from "three/examples/jsm/objects/Reflector";
 import { useFrame, useThree } from "react-three-fiber";
@@ -36,11 +37,29 @@ const makeMirror = (xSign: number, camera: Camera) => {
   };
 };
 
+const makeLight = (position: [number, number, number], camera: Camera) => {
+  const light = new PointLight("#ffffff", 0.2);
+
+  light.position.set(...position);
+
+  camera.add(light);
+
+  return () => {
+    camera.remove(light);
+  };
+};
+
 export default () => {
   const { camera } = useThree();
 
   useEffect(() => makeMirror(-1, camera), [camera]);
   useEffect(() => makeMirror(1, camera), [camera]);
+  useEffect(() => makeLight([-30, 0, 0], camera), [camera]);
+  useEffect(() => makeLight([30, 0, 0], camera), [camera]);
+  useEffect(() => makeLight([0, 0, -30], camera), [camera]);
+  useEffect(() => makeLight([0, 0, 30], camera), [camera]);
+  useEffect(() => makeLight([0, -30, 0], camera), [camera]);
+  useEffect(() => makeLight([0, 30, 0], camera), [camera]);
 
   useFrame((state) => {
     if (state.camera) {
@@ -57,12 +76,6 @@ export default () => {
         <Background />
       </Suspense>
       <ambientLight intensity={0.05} />
-      <pointLight position={[-30, 0, 0]} intensity={0.2} />
-      <pointLight position={[30, 0, 0]} intensity={0.2} />
-      <pointLight position={[0, 0, -30]} intensity={0.2} />
-      <pointLight position={[0, 0, 30]} intensity={0.2} />
-      <pointLight position={[0, -30, 0]} intensity={0.2} />
-      <pointLight position={[0, 30, 0]} intensity={0.2} />
       <Effects />
     </>
   );
